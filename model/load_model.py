@@ -4,6 +4,10 @@ import torch
 from torchvision import transforms
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from PIL import Image, ImageDraw, ImageFont
+try:
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size=20)
+except OSError:
+    font = ImageFont.load_default()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -37,6 +41,7 @@ def detect_objects(image: Image.Image):
 
     draw = ImageDraw.Draw(image)
     detections = []
+    
 
     for box, label, score in zip(boxes, labels, scores):
         if score > 0.5:
@@ -44,7 +49,7 @@ def detect_objects(image: Image.Image):
             label_str = CLASS_NAMES[label]
             draw.rectangle(box.tolist(), outline="red", width=3)
             draw.text(
-                (box[0], box[1] - 10), f"{label_str} ({score:.2f})", fill="red"
+                (box[0], box[1] - 25), f"{label_str} ({score:.2f})", fill="red",font=font
             )
             detections.append(label_str)
 

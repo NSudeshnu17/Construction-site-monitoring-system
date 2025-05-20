@@ -8,12 +8,10 @@ if not os.path.exists("data"):
 if not os.path.exists(USERS_FILE):
     with open(USERS_FILE, "w") as f:
         json.dump({}, f)
-
-
+        
 def load_users():
     with open(USERS_FILE, "r") as f:
         return json.load(f)
-
 
 def save_users(users):
     with open(USERS_FILE, "w") as f:

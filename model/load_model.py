@@ -4,7 +4,7 @@ from torchvision.models.detection import fasterrcnn_resnet50_fpn
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-
+#device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load model once globally

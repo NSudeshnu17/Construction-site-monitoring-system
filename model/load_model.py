@@ -44,7 +44,9 @@ def detect_objects(image: Image.Image):
             box = box.cpu().numpy().astype(int)
             label_str = CLASS_NAMES[label]
             draw.rectangle(box.tolist(), outline="red", width=3)
-            draw.text((box[0], box[1] - 25), f"{label_str} ({score:.2f})", fill="yellow", font=font)
+            draw.text(
+                (box[0], box[1] - 10), f"{label_str} ({score:.2f})", fill="yellow"
+            )
             detections.append(label_str)
 
     return image, detections

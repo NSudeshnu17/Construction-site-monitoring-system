@@ -18,23 +18,43 @@ def save_detection_data(detections):
 
 
 def plot_compliance_trends():
+    import calendar
+
     df = pd.read_csv(DATA_FILE)
     df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df["week"] = df["timestamp"].dt.strftime("%Y-%U")
-    df["month"] = df["timestamp"].dt.strftime("%Y-%m")
+    
+    # Extract year and week number
+    df["year"] = df["timestamp"].dt.isocalendar().year
+    df["week_num"] = df["timestamp"].dt.isocalendar().week
 
-    weekly = df.groupby(["week", "label"]).size().unstack(fill_value=0)
+    # Group by (year, week) and label
+    weekly = df.groupby(["year", "week_num", "label"]).size().unstack(fill_value=0)
+
+    # Generate readable labels with date ranges
+    readable_labels = []
+    for year, week in weekly.index:
+        start_date = datetime.strptime(f"{year}-W{int(week):02d}-1", "%G-W%V-%u")
+        end_date = start_date + pd.Timedelta(days=6)
+        label = f"Week {week} ({start_date.strftime('%b %d')}–{end_date.strftime('%d')})"
+        readable_labels.append(label)
+    
+    weekly.index = readable_labels
+
+    # Monthly grouping as before
+    df["month"] = df["timestamp"].dt.strftime("%Y-%m")
     monthly = df.groupby(["month", "label"]).size().unstack(fill_value=0)
 
-    fig, axes = plt.subplots(2, 1, figsize=(12, 10))
+    # Plotting
+    fig, axes = plt.subplots(2, 1, figsize=(14, 10))
     weekly.plot(kind="barh", ax=axes[0], title="Weekly Compliance")
     monthly.plot(kind="barh", ax=axes[1], title="Monthly Compliance")
-    
+
     axes[0].set_xlabel("Detections")
     axes[1].set_xlabel("Detections")
     axes[0].set_ylabel("Week")
     axes[1].set_ylabel("Month")
-    
+
     plt.tight_layout()
     return fig
+
 

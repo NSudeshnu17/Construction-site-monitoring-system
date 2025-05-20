@@ -24,10 +24,6 @@ if "authenticated" not in st.session_state:
 # ───────────────────────────────────────────────
 def landing_page():
     st.title("🏗️ Construction Site Safety Monitor")
-    st.image(
-        "https://cdn.pixabay.com/photo/2016/03/09/09/30/architect-1245725_960_720.jpg",
-        use_container_width=True,
-    )
     st.subheader("Welcome to the Construction Safety Monitoring Platform")
     st.markdown(
         "Detect PPE and track safety compliance with AI-powered video and photo analysis."

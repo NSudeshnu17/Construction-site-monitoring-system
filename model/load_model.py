@@ -36,7 +36,6 @@ def detect_objects(image: Image.Image):
     scores = output["scores"]
 
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype("arial.ttf", size=15)
     detections = []
 
     for box, label, score in zip(boxes, labels, scores):

@@ -26,8 +26,15 @@ def plot_compliance_trends():
     weekly = df.groupby(["week", "label"]).size().unstack(fill_value=0)
     monthly = df.groupby(["month", "label"]).size().unstack(fill_value=0)
 
-    fig, axes = plt.subplots(2, 1, figsize=(12, 8))
-    weekly.plot(kind="bar", ax=axes[0], title="Weekly Compliance")
-    monthly.plot(kind="bar", ax=axes[1], title="Monthly Compliance")
+    fig, axes = plt.subplots(2, 1, figsize=(12, 10))
+    weekly.plot(kind="barh", ax=axes[0], title="Weekly Compliance")
+    monthly.plot(kind="barh", ax=axes[1], title="Monthly Compliance")
+    
+    axes[0].set_xlabel("Detections")
+    axes[1].set_xlabel("Detections")
+    axes[0].set_ylabel("Week")
+    axes[1].set_ylabel("Month")
+    
     plt.tight_layout()
     return fig
+

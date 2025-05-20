@@ -6,3 +6,5 @@ matplotlib
 pillow
 opencv-python-headless
 gdown
+gspread
+oauth2client

@@ -44,6 +44,7 @@ def landing_page():
     st.markdown("Don't have an account?")
     if st.button("Register here"):
         st.session_state.show_register = True
+        st.rerun()
 
 # ───────────────────────────────────────────────
 # REGISTRATION PAGE

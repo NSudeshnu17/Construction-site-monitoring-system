@@ -73,7 +73,7 @@ def dashboard():
         # st.session_state.authenticated = False
         #st.session_state.user = None
         st.session_state.clear()
-        st.experimental_rerun()
+        st.rerun()
 
     tab = st.sidebar.radio("Navigation", ["📸 Upload & Detect", "📊 Compliance Trends"])
 

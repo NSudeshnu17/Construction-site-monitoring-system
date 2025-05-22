@@ -6,18 +6,17 @@ import os
 from PIL import Image
 import datetime
 import cv2
-from tempfile import NamedTemporaryFile
 
 # Optional fix for torch watchers on some systems
-import os
-
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 st.set_page_config(page_title="Construction Safety Monitor", layout="wide")
 
+# Initialize session state keys
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
-
+if "show_register" not in st.session_state:
+    st.session_state.show_register = False
 
 # ───────────────────────────────────────────────
 # LANDING PAGE
@@ -38,13 +37,13 @@ def landing_page():
             st.session_state.user = username
             st.session_state.show_register = False
             st.success("Login successful!")
+            st.rerun()  # Redirect immediately to dashboard
         else:
             st.error("Invalid credentials!")
 
     st.markdown("Don't have an account?")
     if st.button("Register here"):
         st.session_state.show_register = True
-
 
 # ───────────────────────────────────────────────
 # REGISTRATION PAGE
@@ -62,7 +61,7 @@ def registration_page():
             st.session_state.user = new_user
             st.session_state.show_register = False
             st.success("Registration successful. Redirecting to dashboard...")
-
+            st.rerun()  # Redirect immediately to dashboard
 
 # ───────────────────────────────────────────────
 # DASHBOARD PAGE
@@ -70,8 +69,6 @@ def registration_page():
 def dashboard():
     st.sidebar.title(f"👷 Hello, {st.session_state.user}")
     if st.sidebar.button("Logout"):
-        # st.session_state.authenticated = False
-        #st.session_state.user = None
         st.session_state.clear()
         st.rerun()
 
@@ -79,9 +76,7 @@ def dashboard():
 
     if tab == "📸 Upload & Detect":
         st.title("Upload Image or Video for Safety Detection")
-        file = st.file_uploader(
-            "Upload photo or video", type=["jpg", "jpeg", "png", "mp4"]
-        )
+        file = st.file_uploader("Upload photo or video", type=["jpg", "jpeg", "png", "mp4"])
 
         if file:
             save_path = os.path.join("uploads", file.name)
@@ -125,21 +120,15 @@ def dashboard():
                 st.success(f"Processed {frame_count} frames. Detection saved.")
 
                 for idx, img in enumerate(sampled_images):
-                    st.image(
-                        img, caption=f"Detected Frame {idx+1}", use_container_width=True
-                    )
+                    st.image(img, caption=f"Detected Frame {idx+1}", use_container_width=True)
 
     elif tab == "📊 Compliance Trends":
         st.title("Weekly / Monthly Safety Analysis")
         st.pyplot(plot_compliance_trends())
 
-
 # ───────────────────────────────────────────────
 # APP ROUTING
 # ───────────────────────────────────────────────
-if "show_register" not in st.session_state:
-    st.session_state.show_register = False
-
 if not st.session_state.authenticated:
     if st.session_state.show_register:
         registration_page()

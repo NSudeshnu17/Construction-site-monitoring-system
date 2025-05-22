@@ -70,8 +70,9 @@ def registration_page():
 def dashboard():
     st.sidebar.title(f"👷 Hello, {st.session_state.user}")
     if st.sidebar.button("Logout"):
-        st.session_state.authenticated = False
-        st.session_state.user = None
+        # st.session_state.authenticated = False
+        #st.session_state.user = None
+        st.session_state.clear()
         st.experimental_rerun()
 
     tab = st.sidebar.radio("Navigation", ["📸 Upload & Detect", "📊 Compliance Trends"])
